@@ -98,3 +98,83 @@ def fetch_pokemon(name: str) -> dict:
         "types": types,
         "stats": stats
     }
+
+# ─── Type effectiveness data (for weakness analysis) ────────────────────────
+# Mapping: attacker_type → list of types it's strong against.
+# Simplified — real Pokémon has 18 types and a full chart. This is enough
+# for our analyzer to give meaningful output without us hand-typing the
+# whole 18×18 chart. In a real product, you'd fetch this from the API too.
+TYPE_WEAKNESSES = {
+    "fire":     ["water", "ground", "rock"],
+    "water":    ["electric", "grass"],
+    "grass":    ["fire", "ice", "poison", "flying", "bug"],
+    "electric": ["ground"],
+    "ice":      ["fire", "fighting", "rock", "steel"],
+    "fighting": ["flying", "psychic", "fairy"],
+    "poison":   ["ground", "psychic"],
+    "ground":   ["water", "grass", "ice"],
+    "flying":   ["electric", "ice", "rock"],
+    "psychic":  ["bug", "ghost", "dark"],
+    "bug":      ["fire", "flying", "rock"],
+    "rock":     ["water", "grass", "fighting", "ground", "steel"],
+    "ghost":    ["ghost", "dark"],
+    "dragon":   ["ice", "dragon", "fairy"],
+    "dark":     ["fighting", "bug", "fairy"],
+    "steel":    ["fire", "fighting", "ground"],
+    "fairy":    ["poison", "steel"],
+    "normal":   ["fighting"],
+}
+
+
+
+# ─── Function 2: analyze a team ─────────────────────────────────────────────
+def analyze_team(team: list) -> dict:
+    """
+    Given a list of Pokémon dicts (from fetch_pokemon), compute team stats.
+
+    Returns a dict with average stats, type list, and weaknesses.
+    """
+    # PYTHON BASIC: validation. Fail fast and loud on bad input.
+    if not (MIN_TEAM_SIZE <= len(team) <= MAX_TEAM_SIZE):
+        raise ValueError(
+            f"Team must have {MIN_TEAM_SIZE}–{MAX_TEAM_SIZE} Pokémon, got {len(team)}"
+        )
+
+    logger.info("Analyzing team of %d Pokémon", len(team))
+
+    # PYTHON BASIC: building up totals with a loop.
+    stat_totals = {"hp": 0, "attack": 0, "defense": 0, "speed": 0}
+    all_types = []          # PYTHON BASIC: list — ordered, allows duplicates
+    weaknesses = set()      # PYTHON BASIC: set — unordered, no duplicates
+
+    # PYTHON BASIC: for-loop iterating through a list of dicts
+    for pokemon in team:
+        for stat_name in stat_totals:
+            stat_totals[stat_name] += pokemon["stats"].get(stat_name, 0)
+
+        # PYTHON BASIC: extending a list with another list
+        all_types.extend(pokemon["types"])
+
+        # Build up the set of weaknesses across the whole team
+        for ptype in pokemon["types"]:
+            for weakness in TYPE_WEAKNESSES.get(ptype, []):
+                weaknesses.add(weakness)
+
+    # Compute averages. PYTHON BASIC: dict comprehension again.
+    averages = {name: round(total / len(team), 1) for name, total in stat_totals.items()}
+
+    metrics["teams_analyzed"] += 1
+    logger.info("Team analysis complete: %d unique types, %d weaknesses",
+                len(set(all_types)), len(weaknesses))
+
+    return {
+        "team_size": len(team),
+        "names": [p["name"] for p in team],
+        "average_stats": averages,
+        "types": sorted(set(all_types)),    # PYTHON BASIC: sorted() returns a list
+        "weak_against": sorted(weaknesses),
+    }
+
+# ---
+
+        
