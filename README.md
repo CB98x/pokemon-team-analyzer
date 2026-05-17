@@ -2,7 +2,7 @@
 
 A command-line tool that analyzes a team of 3–6 Pokémon and reports on their
 combined stats, type coverage, and defensive weaknesses. Built as a
-learning project to practice consuming a public REST API.
+learning project to practice consuming a public REST API + practising Git & python projects' general development flow.
 
 
 ## Demo
