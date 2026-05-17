@@ -102,7 +102,7 @@ REST API. No authentication required.
 - **Comprehensive Error Handling**
 - **Using logger to customized different levels as per use case requirements**
 - **My first introduciotn to writing tests with pytest!**
-- **Ample practise of Git commands to push, pull, make branches etc and reading CLI outputs + resolving conflicts**
+- **Ample practise of Git commands to push, pull, make branches etc and reading CLI outputs + resolving conflicts. Also configure gh for CLI based pr merging & branch cleanup**
 - **Practised breaking down and building up functions**
 
 
