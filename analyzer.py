@@ -175,6 +175,37 @@ def analyze_team(team: list) -> dict:
         "weak_against": sorted(weaknesses),
     }
 
+
+# ─── Function 3: format the report ──────────────────────────────────────────
+def format_report(analysis: dict) -> str:
+    """Convert an analysis dict into a human-readable string."""
+    # PYTHON BASIC: building a string with a list and join — faster than +=
+    lines = []
+    lines.append("─" * 50)
+    lines.append(f"  TEAM ANALYSIS — {analysis['team_size']} Pokémon")
+    lines.append("─" * 50)
+    lines.append(f"  Roster:       {', '.join(analysis['names'])}")
+    lines.append(f"  Types:        {', '.join(analysis['types'])}")
+    lines.append("")
+    lines.append("  Average stats:")
+    for stat, value in analysis["average_stats"].items():
+        # PYTHON BASIC: f-string with formatting — :>8 right-pads to 8 chars
+        lines.append(f"    {stat:>10}: {value}")
+    lines.append("")
+    lines.append(f"  Weak against: {', '.join(analysis['weak_against'])}")
+    lines.append("─" * 50)
+    return "\n".join(lines)
+
+
+def get_metrics_snapshot() -> dict:
+    """Return a copy of the metrics. Used by the CLI to print stats at the end."""
+    snapshot = dict(metrics)        # PYTHON BASIC: making a copy of a dict
+    if snapshot["api_calls_total"] > 0:
+        snapshot["avg_latency_ms"] = round(
+            snapshot["api_latency_ms_total"] / snapshot["api_calls_total"], 1
+        )
+    else:
+        snapshot["avg_latency_ms"] = 0
+    return snapshot
 # ---
 
-        
