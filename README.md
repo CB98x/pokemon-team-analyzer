@@ -91,6 +91,21 @@ pytest -v
 Type and stat data from [PokéAPI](https://pokeapi.co/), a free public
 REST API. No authentication required.
 
+## What I learned
+
+- **Dev env setup** : Setting up venv & activating it + setting up requirements.txt
+- **Used GitBash to practise Linux commands on Windows**
+- **Had to be mindful of Yak shaving!**
+- curl to talk to APIs + jq to parse and understand structure
+- Python Access Translation for JSON
+- Used  sys module for talking to Python Interpreter
+- **Comprehensive Error Handling**
+- **Using logger to customized different levels as per use case requirements**
+- **My first introduciotn to writing tests with pytest!**
+- **Ample practise of Git commands to push, pull, make branches etc and reading CLI outputs + resolving conflicts**
+- **Practised breaking down and building up functions**
+
+
 ## License
 
 MIT
